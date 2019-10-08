@@ -87,6 +87,9 @@ var app = {
 
   updateDisplayLoser: function(questionObj) {
     console.log("inside updateDisplayLoser");
+    // TODO create result divs
+    // TODO write to result divs
+    
     $("#outcome").show();
     $(".selectOption").hide();
     // $("#outcome").hide();
@@ -129,6 +132,7 @@ var app = {
     let arrayLength = questionBank.length;
     console.log(questionBank);
     console.log("x = " + x);
+    // TODO prob need to reset timer in updateDisplay
     app.updateDisplay(questionBank[x]);
 
     $(".selectOption").click(function() {
@@ -164,8 +168,10 @@ var app = {
         app.updateDisplayGameOver(correctGuess, incorrectGuess);
       }
 
-      // TODO Create a display results function
+      
     });
+
+    
   }
 };
 
