@@ -58,8 +58,24 @@ var app = {
     return questionBank;
   },
 
+  updateDisplayGameOver: function(good,bad) {
+    console.log("inside updateDisplayGameOver");
+    $("#outcome").show();
+    $(".selectOption").hide();
+    $("#remainingSecs").hide();
+    $("#question").hide();
+    // $("#outcome").hide();
+    app.outcomeDiv.innerHTML = "GAME OVER!!!";
+    console.log("end of array, need to create Final Results Display");
+    console.log("Correct: " + good);
+    console.log("Incorrect: " + bad);
+
+    console.log("leaving updateDisplayGameOver");
+  },
+
   updateDisplayWinner: function(questionObj) {
     console.log("inside updateDisplayWinner");
+    $("#outcome").show();
     $(".selectOption").hide();
     // $("#outcome").hide();
     app.outcomeDiv.innerHTML = "Winner Winner Chicken Dinner!!";
@@ -71,6 +87,7 @@ var app = {
 
   updateDisplayLoser: function(questionObj) {
     console.log("inside updateDisplayLoser");
+    $("#outcome").show();
     $(".selectOption").hide();
     // $("#outcome").hide();
     app.outcomeDiv.innerHTML = "So wrong man, just so wrong...";
@@ -122,18 +139,17 @@ var app = {
         console.log("You guessed correctly, rock on!");
         correctGuess += 1;
         app.updateDisplayWinner();
-        x += 1;
+        // x += 1;
         console.log("x updated post correct guess to" + x);
         if (x < arrayLength) {
-          //   questionBank[x].correct = 2;
           app.updateDisplay(questionBank[x]);
           console.log("in if x < arraryLength, just back from updateDisplay");
         }
+        // * If incorrect answer
       } else {
         app.updateDisplayLoser();
         console.log("Nopers, that wasn't it...");
         incorrectGuess += 1;
-        // questionBank[x].correct = 1;
         if (x < arrayLength) {
           app.updateDisplay(questionBank[x]);
         }
@@ -145,17 +161,11 @@ var app = {
         questionBank[x].correct = 2;
         app.updateDisplay(questionBank[x]);
       } else {
-        console.log("end of array, need to create Final Results Display");
-        console.log("Correct: " + correctGuess);
-        console.log("Incorrect: " + incorrectGuess);
-        
+        app.updateDisplayGameOver(correctGuess, incorrectGuess);
       }
 
       // TODO Create a display results function
     });
-    // console.log("end of array, need to create Final Results Display");
-    // console.log("Correct: " + correctGuess);
-    // console.log("Incorrect: " + incorrectGuess);
   }
 };
 
