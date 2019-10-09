@@ -58,7 +58,7 @@ var app = {
     return questionBank;
   },
 
-  updateDisplayGameOver: function(good,bad) {
+  updateDisplayGameOver: function(good, bad) {
     console.log("inside updateDisplayGameOver");
     $("#outcome").show();
     $(".selectOption").hide();
@@ -71,6 +71,18 @@ var app = {
     console.log("Incorrect: " + bad);
 
     console.log("leaving updateDisplayGameOver");
+  },
+
+  updateOutOfTime: function(questionObj) {
+    console.log("inside updateOutOfTime");
+    $("#outcome").show();
+    $(".selectOption").hide();
+    // $("#outcome").hide();
+    app.outcomeDiv.innerHTML = "You done ran out of time son!";
+    $("#outcome").hide(3000, function() {
+      // $("#outcome").show();
+    });
+    console.log("leaving updateOutOfTime");
   },
 
   updateDisplayWinner: function(questionObj) {
@@ -89,7 +101,7 @@ var app = {
     console.log("inside updateDisplayLoser");
     // TODO create result divs
     // TODO write to result divs
-    
+
     $("#outcome").show();
     $(".selectOption").hide();
     // $("#outcome").hide();
@@ -109,7 +121,7 @@ var app = {
     // * lets clear the divs first off
     // $("#question").empty()
 
-    app.remainingDiv.innerHTML = "Remaining Seconds: need to add functionality";
+    // app.remainingDiv.innerHTML = "Remaining Seconds: need to add functionality";
     app.questionDiv.innerHTML = "Question: " + questionObj.question;
     // $("#question").innerHTML = "Question: " + questionObj.question;
 
@@ -127,51 +139,80 @@ var app = {
     let x = 0;
     let correctGuess = 0;
     let incorrectGuess = 0;
+    let ranOutOfTime = 0;
+
+    var number = 30;
+    var intervalId;
+
+    function upDateTimer(){
+      console.log("in upDateTimer" + number);
+      number--;
+      app.remainingDiv.innerHTML = number;
+      if (number === 0){
+        // alert("You done ran out of time son.");
+        clearInterval(intervalId);
+        ranOutOfTime +=1;
+        app.updateOutOfTime();
+        if (x < arrayLength) {
+          number = 30;
+          app.updateDisplay(questionBank[x]);
+          console.log("in if x < arraryLength, just back from updateDisplay");
+        }
+      }
+
+    };
+
+    function getSelection() {
+     
+      clearInterval(intervalId);
+     
+      intervalId = setInterval(upDateTimer, 1000);
+
+      $(".selectOption").click(function() {
+       
+        console.log(this);
+        console.log(this.innerHTML);
+        // $("#remainingSecs").html(number);
+
+        // * Check if correct answer
+        if (this.innerHTML === questionBank[x].answer) {
+          console.log("You guessed correctly, rock on!");
+          correctGuess += 1;
+          app.updateDisplayWinner();
+          if (x < arrayLength) {
+            app.updateDisplay(questionBank[x]);
+            console.log("in if x < arraryLength, just back from updateDisplay");
+          }
+          // * If incorrect answer
+        } else {
+          app.updateDisplayLoser();
+          console.log("Nopers, that wasn't it...");
+          incorrectGuess += 1;
+          if (x < arrayLength) {
+            app.updateDisplay(questionBank[x]);
+          }
+        }
+
+        x += 1;
+        console.log("x updated to outside of if/then land" + x);
+        if (x < arrayLength) {
+          questionBank[x].correct = 2;
+          app.updateDisplay(questionBank[x]);
+        } else {
+          app.updateDisplayGameOver(correctGuess, incorrectGuess);
+        }
+      });
+    }
+// * 
     console.log("Inside playTrivia");
     questionBank = this.initQuestionBank();
     let arrayLength = questionBank.length;
     console.log(questionBank);
     console.log("x = " + x);
-    // TODO prob need to reset timer in updateDisplay
     app.updateDisplay(questionBank[x]);
 
-    $(".selectOption").click(function() {
-      console.log(this);
-      console.log(this.innerHTML);
-      // * Check if correct answer
-      if (this.innerHTML === questionBank[x].answer) {
-        console.log("You guessed correctly, rock on!");
-        correctGuess += 1;
-        app.updateDisplayWinner();
-        // x += 1;
-        console.log("x updated post correct guess to" + x);
-        if (x < arrayLength) {
-          app.updateDisplay(questionBank[x]);
-          console.log("in if x < arraryLength, just back from updateDisplay");
-        }
-        // * If incorrect answer
-      } else {
-        app.updateDisplayLoser();
-        console.log("Nopers, that wasn't it...");
-        incorrectGuess += 1;
-        if (x < arrayLength) {
-          app.updateDisplay(questionBank[x]);
-        }
-      }
-
-      x += 1;
-      console.log("x updated to outside of if/then land" + x);
-      if (x < arrayLength) {
-        questionBank[x].correct = 2;
-        app.updateDisplay(questionBank[x]);
-      } else {
-        app.updateDisplayGameOver(correctGuess, incorrectGuess);
-      }
-
-      
-    });
-
-    
+    getSelection();
+   
   }
 };
 
