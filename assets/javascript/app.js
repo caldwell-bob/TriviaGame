@@ -86,7 +86,9 @@ var app = {
     console.log("inside updateOutOfTime");
     $("#outcome").show();
     $(".selectOption").hide();
-    app.outcomeDiv.innerHTML = "You done ran out of time son!";
+    console.log(questionObj);
+    app.outcomeDiv.innerHTML = "Out of Time!";
+    app.correctDiv.innerHTML = "The correct answer was " + questionObj.answer;
     $("#outcome").hide(3000, function() {
       // $("#outcome").show();
     });
@@ -97,10 +99,11 @@ var app = {
     console.log("inside updateDisplayWinner");
     // clearInterval(intervalId)
     $("#outcome").show();
-    $(".selectOption").hide();
+    $("#question").hide();
+    $("#selectOption").hide();
     // $("#outcome").hide();
-    app.outcomeDiv.innerHTML = "Winner Winner Chicken Dinner!!";
-    $("#outcome").hide(3000, function() {
+    app.outcomeDiv.innerHTML = "You are Correct!!";
+    $("#outcome").hide(5000, function() {
       
     });
     console.log("leaving updateDisplayWinner");
@@ -127,8 +130,9 @@ var app = {
     console.log("obj.id = " + questionObj.id);
     console.log(questionObj);
     $(".selectOption").show();
-    app.remainingDiv.innerHTML = " Remaining Seconds: 30";
-    app.questionDiv.innerHTML = "Question: " + questionObj.question;
+    $("#question").show();
+    app.remainingDiv.innerHTML = " Time Remaining: 30 Seconds";
+    app.questionDiv.innerHTML = questionObj.question;
     app.selectionDiv_0.innerHTML = questionObj.selection_0;
     app.selectionDiv_1.innerHTML = questionObj.selection_1;
     app.selectionDiv_2.innerHTML = questionObj.selection_2;
@@ -145,19 +149,27 @@ var app = {
     var number = 30; // Used as timer countdown
     var intervalId;
 
+    function setTimer(){
+      number = 30; // Timer runs for this many seconds
+      console.log("setting up the setInterval to call upDateTimer w/in setTimer()");
+      intervalId = setInterval(upDateTimer, 1000);
+    };
+
     function upDateTimer(){
       // console.log("in upDateTimer" + number);
       number--;
-      app.remainingDiv.innerHTML = " Remaining Seconds: " + number;
+      app.remainingDiv.innerHTML = " Time Remaining: " + number;
       if (number === 0){
         // alert("You done ran out of time son.");
         clearInterval(intervalId);
         ranOutOfTime +=1;
-        app.updateOutOfTime();
+        app.updateOutOfTime(questionBank[x]);
+        // setTimer();
         if (x < arrayLength) {
           // TODO Get Timer to Reset after running out of town, correct guess, incorrect guess
           // ? Am I dealing with a scoping issue here
           number = 30;
+          setTimer();
           app.updateDisplay(questionBank[x]);
           console.log("in if x < arraryLength, in upDateTimer, just back from updateDisplay");
         }
@@ -170,9 +182,10 @@ var app = {
       // * lets clear out the intervalID 
       clearInterval(intervalId);
       // * use setInterval to call upDateTimer every sec, to update remainSseconds Div
-      number = 30; // Timer runs for this many seconds
-      console.log("setting up the setInterval to call upDateTimer");
-      intervalId = setInterval(upDateTimer, 1000);
+      // number = 30; // Timer runs for this many seconds
+      // console.log("setting up the setInterval to call upDateTimer");
+      // intervalId = setInterval(upDateTimer, 1000);
+      setTimer();
 
       // * lets set a click event on selectOption divs
       $(".selectOption").click(function() {
@@ -181,22 +194,27 @@ var app = {
         console.log(this.innerHTML);
         // * Check if correct answer
         if (this.innerHTML === questionBank[x].answer) {
-          clearInterval(intervalId);
+          // clearInterval(intervalId);
           console.log("You guessed correctly, rock on!");
           correctGuess += 1; // * increase correctGuess total
           app.updateDisplayWinner();
           if (x < arrayLength) {
-            clearInterval(intervalId);
+            // clearInterval(intervalId);
+            setTimer();
             app.updateDisplay(questionBank[x]);
             console.log("in if x < arraryLength, just back from updateDisplay");
+            console.log("aobut to")
           }
           // * If incorrect answer
         } else {
-          clearInterval(intervalId);
+          // TODO verify I'm not calling setTimer w/in updateDisplayLoser or updateDisplay
+          // clearInterval(intervalId);
+         
           app.updateDisplayLoser(questionBank[x]);
           console.log("Nopers, that wasn't it...");
           incorrectGuess += 1;
           if (x < arrayLength) {
+            setTimer();
             app.updateDisplay(questionBank[x]);
           }
         }
@@ -212,7 +230,7 @@ var app = {
       });
     }
 
-    // TODO (BLOCKER)- Get the timer to restart after an event (outOfTime, correct/incorrectGuess)
+    // TODO (BLOCKER)- Get the timer to restart after an event (outOfTime, incorrectGuess)
 
     // * Start of logic for playTrivia -----------------------------------------------
     console.log("Inside playTrivia");
