@@ -171,6 +171,7 @@ var app = {
       clearInterval(intervalId);
       // * use setInterval to call upDateTimer every sec, to update remainSseconds Div
       number = 30; // Timer runs for this many seconds
+      console.log("setting up the setInterval to call upDateTimer");
       intervalId = setInterval(upDateTimer, 1000);
 
       // * lets set a click event on selectOption divs
@@ -230,9 +231,7 @@ var app = {
 };
 
 app.playTrivia();
-console.log(
-  "ok, it returned me out of the playTrivia function, just the .click event"
-);
+console.log("ok, it returned me beneath app.playTrivia() call");
 
 // TODO (HIGH) add css
 // TODO (MED) add gifs
