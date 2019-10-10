@@ -107,13 +107,16 @@ var app = {
 
   updateDisplayLoser: function(questionObj) {
     console.log("inside updateDisplayLoser");
+    console.log(questionObj);
     $("#outcome").show();
     $(".selectOption").hide();
     // $("#outcome").hide();
     app.outcomeDiv.innerHTML = "So wrong man, just so wrong...";
+    app.correctDiv.innerHTML = "The correct answer was " + questionObj.answer;
     $("#outcome").hide(3000, function() {
       // $("#outcome").show();
     });
+    $("#correct").hide(2000, function(){});
     console.log("leaving updateDisplayLoserr");
   },
 
@@ -187,7 +190,7 @@ var app = {
           // * If incorrect answer
         } else {
           clearInterval(intervalId);
-          app.updateDisplayLoser();
+          app.updateDisplayLoser(questionBank[x]);
           console.log("Nopers, that wasn't it...");
           incorrectGuess += 1;
           if (x < arrayLength) {
@@ -206,7 +209,7 @@ var app = {
       });
     }
 
-    // TODO - Get the timer to restart after an event (outOfTime, correct/incorrectGuess)
+    // TODO (BLOCKER)- Get the timer to restart after an event (outOfTime, correct/incorrectGuess)
 
     // * Start of logic for playTrivia -----------------------------------------------
     console.log("Inside playTrivia");
@@ -228,3 +231,7 @@ app.playTrivia();
 console.log(
   "ok, it returned me out of the playTrivia function, just the .click event"
 );
+
+// TODO (HIGH) add css
+// TODO (MED) add gifs
+// TODO (HIGH) display correct answer (out of time, incorrecty answer)
