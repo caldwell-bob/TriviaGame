@@ -95,6 +95,7 @@ var app = {
 
   updateDisplayWinner: function(questionObj) {
     console.log("inside updateDisplayWinner");
+    // clearInterval(intervalId)
     $("#outcome").show();
     $(".selectOption").hide();
     // $("#outcome").hide();
@@ -103,6 +104,7 @@ var app = {
       
     });
     console.log("leaving updateDisplayWinner");
+    // intervalId = setInterval(playTrivia.updateTimer, 1000);
   },
 
   updateDisplayLoser: function(questionObj) {
