@@ -146,7 +146,7 @@ var app = {
     var intervalId;
 
     function upDateTimer(){
-      console.log("in upDateTimer" + number);
+      // console.log("in upDateTimer" + number);
       number--;
       app.remainingDiv.innerHTML = " Remaining Seconds: " + number;
       if (number === 0){
